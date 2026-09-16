@@ -1,0 +1,4 @@
+# Helm dependency-vendoring artifacts -- rebuilt via `helm dependency update`,
+# not committed (they're a build output of the local file:// dependency).
+examples/consumer/charts/
+examples/consumer/Chart.lock

@@ -1,0 +1,41 @@
+# This file documents the values schema a consuming chart must provide to
+# use gateway-route-toggle's named templates (gateway-route-toggle.ingress /
+# gateway-route-toggle.httproute) -- it is NOT automatically applied to a
+# consuming chart's own values. See README.md for the consumption pattern
+# and examples/consumer/ for a real, runnable example chart using exactly
+# this schema.
+#
+# Single shared routing schema -- the chart author writes ONE set of routes,
+# and renders whichever mechanism(s) are enabled from it. This is the exact
+# retrofit gap found in the chase: real charts (mlflow, litellm, grafana,
+# bitnami, gitlab, microcks, fleetdm, etc.) each hand-roll a parallel
+# HTTPRoute block today instead of deriving both from one schema.
+
+routing:
+  host: app.example.com
+  # canonical path list -- vendor-neutral pathType values, translated per-mechanism below
+  paths:
+    - path: /
+      pathType: Prefix      # Prefix | Exact
+      serviceName: app-svc
+      servicePort: 80
+    - path: /api
+      pathType: Prefix
+      serviceName: api-svc
+      servicePort: 8080
+    - path: /healthz
+      pathType: Exact
+      serviceName: app-svc
+      servicePort: 80
+
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  tls: []
+
+httpRoute:
+  enabled: false
+  parentRefs:
+    - name: my-gateway
+      namespace: gateway-system

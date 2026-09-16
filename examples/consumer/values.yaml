@@ -1,0 +1,30 @@
+# Same 3-path example the original proof-of-mechanism used, now driving a
+# real consuming chart instead of a standalone application chart.
+
+routing:
+  host: app.example.com
+  paths:
+    - path: /
+      pathType: Prefix
+      serviceName: app-svc
+      servicePort: 80
+    - path: /api
+      pathType: Prefix
+      serviceName: api-svc
+      servicePort: 8080
+    - path: /healthz
+      pathType: Exact
+      serviceName: app-svc
+      servicePort: 80
+
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  tls: []
+
+httpRoute:
+  enabled: false
+  parentRefs:
+    - name: my-gateway
+      namespace: gateway-system

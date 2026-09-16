@@ -1,0 +1,19 @@
+apiVersion: v2
+name: gateway-route-toggle
+description: >-
+  A Helm library chart that lets a chart author define HTTP routing once,
+  in a vendor-neutral schema, and render either a networking.k8s.io/v1
+  Ingress or a Gateway API HTTPRoute (or both, for migration) from that
+  single source.
+type: library
+version: 0.1.0
+appVersion: "0.1.0"
+home: https://github.com/forgepair/helm-gateway-route-toggle
+sources:
+  - https://github.com/forgepair/helm-gateway-route-toggle
+keywords:
+  - gateway-api
+  - httproute
+  - ingress
+  - ingress-nginx-migration
+  - library-chart

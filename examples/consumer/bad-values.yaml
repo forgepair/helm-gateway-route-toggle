@@ -1,0 +1,9 @@
+httpRoute:
+  enabled: true
+routing:
+  host: app.example.com
+  paths:
+    - path: /weird
+      pathType: ImplementationSpecific
+      serviceName: app-svc
+      servicePort: 80

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "gateway-route-toggle values schema",
+  "description": "The values shape a consuming chart must provide to use gateway-route-toggle's named templates. A consuming chart may copy this file as its own values.schema.json, or merge these properties into its existing schema.",
+  "type": "object",
+  "required": ["routing"],
+  "properties": {
+    "routing": {
+      "type": "object",
+      "required": ["host", "paths"],
+      "properties": {
+        "host": {
+          "type": "string",
+          "description": "Hostname used as both Ingress rule host and HTTPRoute hostname."
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["path", "pathType", "serviceName", "servicePort"],
+            "properties": {
+              "path": { "type": "string" },
+              "pathType": {
+                "type": "string",
+                "enum": ["Prefix", "Exact"],
+                "description": "Vendor-neutral path-match type. Only Prefix and Exact are supported -- ImplementationSpecific and any other value fails at template-render time (see templates/_helpers.tpl)."
+              },
+              "serviceName": { "type": "string" },
+              "servicePort": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "className": { "type": "string" },
+        "annotations": { "type": "object" },
+        "tls": { "type": "array" }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "parentRefs": {
+          "type": "array",
+          "description": "Passed through verbatim to HTTPRoute's spec.parentRefs -- at least one entry required if httpRoute.enabled is true."
+        }
+      }
+    }
+  }
+}

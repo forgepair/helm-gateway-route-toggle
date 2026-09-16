@@ -1,0 +1,13 @@
+apiVersion: v2
+name: consumer-example
+description: >-
+  Runnable example of a chart consuming gateway-route-toggle as a Helm
+  library-chart dependency. Not published anywhere -- exists purely to
+  prove and demonstrate the consumption pattern (see ../../README.md).
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: gateway-route-toggle
+    version: "0.1.0"
+    repository: "file://../.."
