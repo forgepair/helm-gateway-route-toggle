@@ -136,8 +136,16 @@ public API and will follow SemVer from v0.1.0 onward:
   applied a rendered `HTTPRoute` against a real Gateway API implementation
   (Envoy Gateway / istio / cilium) to confirm the API server actually
   accepts it (`status.parents[].conditions` reporting `Accepted: True`).
-  Blocked on this machine not having Docker/a container runtime installed
-  for a local `kind`/`k3d` cluster -- see `BRIEF.md`'s status notes.
+  Docker Desktop, `kind`, and Envoy Gateway are now installed on this
+  machine and a local `kind` cluster with Envoy Gateway was brought up
+  (2026-09-16) -- but local antivirus (Norton Web/Mail Shield) is doing
+  TLS interception on loopback traffic to the cluster's API server port,
+  substituting its own certificate and breaking `kubectl`'s TLS
+  verification against the cluster's real CA. This wasn't resolved in the
+  antivirus UI (the interception persisted through a settings toggle and
+  needs a full reboot to clear a kernel-level filter driver, which wasn't
+  done). The cluster/Gateway setup itself is otherwise ready to verify
+  against once that's cleared -- see `BRIEF.md`'s status notes.
 - Packaging/publishing to an OCI registry or Helm repo index.
 
 See `BRIEF.md` for the original pitch, demand evidence, and verification
