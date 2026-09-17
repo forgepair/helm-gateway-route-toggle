@@ -131,22 +131,39 @@ public API and will follow SemVer from v0.1.0 onward:
 
 ## Not yet done
 
-- **Cluster-side verification.** Everything above confirms the rendered
-  YAML is well-formed and matches the intended shape. Nobody has yet
-  applied a rendered `HTTPRoute` against a real Gateway API implementation
-  (Envoy Gateway / istio / cilium) to confirm the API server actually
-  accepts it (`status.parents[].conditions` reporting `Accepted: True`).
-  Docker Desktop, `kind`, and Envoy Gateway are now installed on this
-  machine and a local `kind` cluster with Envoy Gateway was brought up
-  (2026-09-16) -- but local antivirus (Norton Web/Mail Shield) is doing
-  TLS interception on loopback traffic to the cluster's API server port,
-  substituting its own certificate and breaking `kubectl`'s TLS
-  verification against the cluster's real CA. This wasn't resolved in the
-  antivirus UI (the interception persisted through a settings toggle and
-  needs a full reboot to clear a kernel-level filter driver, which wasn't
-  done). The cluster/Gateway setup itself is otherwise ready to verify
-  against once that's cleared -- see `BRIEF.md`'s status notes.
 - Packaging/publishing to an OCI registry or Helm repo index.
+
+Cluster-side verification (previously the only item here) is now
+complete -- see "Cluster-side verification" below.
+
+## Cluster-side verification
+
+Done 2026-09-16/17 against a local `kind` cluster running Envoy Gateway
+v1.5.0 (`GatewayClass eg`, `Gateway my-gateway` in namespace
+`gateway-system`). The example consumer chart's `HTTPRoute` was rendered
+(`helm template test . --set httpRoute.enabled=true`) and applied against
+the live API server, with minimal dummy `app-svc`/`api-svc` Services added
+so the route's `backendRefs` had something real to resolve against.
+Result: `status.parents[].conditions` on the live `HTTPRoute` object
+reported both `Accepted: True` and `ResolvedRefs: True`
+(`controllerName: gateway.envoyproxy.io/gatewayclass-controller`), and the
+Gateway's listener showed `attachedRoutes: 1`. This confirms the rendered
+YAML isn't just well-formed but is actually accepted end-to-end by a real
+Gateway API implementation.
+
+Note: the `Gateway` object's own top-level `status.conditions` shows
+`Programmed: False` (`AddressNotAssigned`) because its `LoadBalancer`
+Service never gets an external IP on a vanilla `kind` cluster (no
+MetalLB/cloud LB controller) -- unrelated to this chart, and not a
+blocker for route verification, which is judged at the `HTTPRoute` and
+listener level instead.
+
+This also closes out the earlier blocker noted here: local antivirus
+(Norton Web/Mail Shield) was doing TLS interception on loopback traffic to
+the cluster's API server port. A reboot (2026-09-17) did not fully clear
+it -- a raw TLS probe to the API server port still showed Norton's
+substituted certificate -- but `kubectl` itself connected and worked
+correctly regardless, so it never actually blocked this verification.
 
 See `BRIEF.md` for the original pitch, demand evidence, and verification
 history.
