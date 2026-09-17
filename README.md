@@ -20,10 +20,12 @@ microcks, fleetdm, and others).
 
 ## Status
 
-Proof-of-mechanism verified, converted to a real Helm library chart
-(`type: library`) with a working example consumer. **Not yet published**
-to any Helm repo / OCI registry. Scope is deliberately minimal -- see
-below.
+Proof-of-mechanism verified (both `helm template` rendering and live
+cluster acceptance via a real Gateway API implementation -- see "Cluster-
+side verification" below), converted to a real Helm library chart
+(`type: library`) with a working example consumer. Published to GHCR as
+an OCI chart (see "Using it in your chart" below). Scope is deliberately
+minimal -- see below.
 
 ## Scope (what this does and does not support)
 
@@ -62,12 +64,19 @@ already provides, not annotation-level parity.
    ```yaml
    dependencies:
      - name: gateway-route-toggle
-       version: "0.1.0"
-       repository: "file://../path/to/gateway-route-toggle"  # or an OCI repo once published
+       version: "0.1.1"
+       repository: "oci://ghcr.io/forgepair"
    ```
 
    Run `helm dependency update` to vendor it into your chart's `charts/`
-   directory.
+   directory. (A local `file://../path/to/gateway-route-toggle` repository
+   also works for developing against a checked-out copy of this repo.)
+
+   You can also pull it directly:
+
+   ```
+   helm pull oci://ghcr.io/forgepair/gateway-route-toggle --version 0.1.1
+   ```
 
 2. Add the shared schema to your chart's own `values.yaml` (see
    `values.schema.json` for the full shape, and
@@ -131,10 +140,9 @@ public API and will follow SemVer from v0.1.0 onward:
 
 ## Not yet done
 
-- Packaging/publishing to an OCI registry or Helm repo index.
-
-Cluster-side verification (previously the only item here) is now
-complete -- see "Cluster-side verification" below.
+Nothing blocking adoption -- cluster-side verification and OCI publishing
+(previously the two items here) are both complete, see the sections
+below.
 
 ## Cluster-side verification
 

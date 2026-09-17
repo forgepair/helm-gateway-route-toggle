@@ -6,8 +6,8 @@ description: >-
   Ingress or a Gateway API HTTPRoute (or both, for migration) from that
   single source.
 type: library
-version: 0.1.0
-appVersion: "0.1.0"
+version: 0.1.1
+appVersion: "0.1.1"
 home: https://github.com/forgepair/helm-gateway-route-toggle
 sources:
   - https://github.com/forgepair/helm-gateway-route-toggle
